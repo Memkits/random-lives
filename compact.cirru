@@ -128,7 +128,7 @@
           [] app.schema :as schema
           [] app.config :refer $ [] dev? grid-settings
           [] app.updater :refer $ [] updater
-          [] "\"fontfaceobserver" :as FontFaceObserver
+          [] "\"fontfaceobserver-es" :as FontFaceObserver
       :defs $ {}
         |dispatch! $ quote
           defn dispatch! (op op-data)
@@ -181,8 +181,8 @@
             println "\"App Started"
         |global-fonts $ quote
           def global-fonts $ let
-              font-j $ .load (new FontFaceObserver/@ "\"Josefin Sans")
-              font-h $ .load (new FontFaceObserver/@ "\"Hind")
+              font-j $ .load (new FontFaceObserver/default "\"Josefin Sans")
+              font-h $ .load (new FontFaceObserver/default "\"Hind")
               arr $ new js/Array
             .push arr font-j
             .push arr font-h
