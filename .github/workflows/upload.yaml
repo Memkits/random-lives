@@ -21,7 +21,7 @@ jobs:
         mkdir -p ~/.config/calcit/modules/ && cd ~/.config/calcit/modules/
         && git clone https://github.com/calcit-lang/lilac.git
         && git clone https://github.com/calcit-lang/memof.git
-        && git clone https://github.com/Quamolit/phlox.git
+        && git clone https://github.com/Quamolit/phlox.calcit.git
 
     - name: "compiles to js"
       run: >

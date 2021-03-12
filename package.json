@@ -3,7 +3,7 @@
     "@calcit/procs": "^0.2.88"
   },
   "devDependencies": {
-    "fontfaceobserver": "^2.1.0",
+    "fontfaceobserver-es": "^3.3.3",
     "pixi.js": "^6.0.0",
     "shortid": "^2.2.16",
     "vite": "^2.0.5"
