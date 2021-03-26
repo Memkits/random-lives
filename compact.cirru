@@ -1,7 +1,7 @@
 
 {} (:package |app)
   :configs $ {} (:init-fn |app.main/main!) (:reload-fn |app.main/reload!)
-    :modules $ [] |lilac/ |memof/ |phlox.calcit/
+    :modules $ [] |lilac/ |memof/ |phlox.calcit/ |respo.calcit/ |respo-ui.calcit/
     :version |0.0.1
   :files $ {}
     |app.config $ {}
@@ -24,6 +24,7 @@
           [] phlox.core :refer $ [] hslx rect circle text container graphics create-list
           [] phlox.comp.button :refer $ [] comp-button
           [] app.config :refer $ [] grid-settings
+          [] phlox.input :refer $ [] request-text!
       :defs $ {}
         |comp-container $ quote
           defn comp-container (store)
@@ -53,10 +54,25 @@
                   :on $ {}
                     :pointertap $ fn (e d!)
                       d! :set-grid $ generate-dark-grid!
+                comp-button $ {} (:text "\"Load rule")
+                  :position $ [] 10 320
+                  :on $ {}
+                    :pointertap $ fn (e d!)
+                      request-text! e
+                        {} $ :textarea? true
+                        fn (code)
+                          let
+                              code $ trim code
+                            if
+                              = (pow 2 9) (count code)
+                              d! :set-rule $ read-rule code
+                              do
+                                with-log $ count code
+                                raise "\"invalid length"
                 comp-grid $ :grid store
         |generate-rule! $ quote
           defn generate-rule! () $ ->>
-            repeat (pow 2 8) false
+            repeat (pow 2 9) false
             map $ fn (x)
               >= (rand 1) 0.5
         |display-rule $ quote
@@ -119,6 +135,9 @@
                 (< j 0)
                   nth row $ dec (count row)
                 true $ nth row j
+        |read-rule $ quote
+          defn read-rule (code)
+            map (\ = % "\"1") (split code "\"")
       :proc $ quote ()
     |app.main $ {}
       :ns $ quote
@@ -149,15 +168,21 @@
                 v2 $ read-grid (dec i) j grid
                 v3 $ read-grid (dec i) (inc j) grid
                 v4 $ read-grid i (dec j) grid
+                v5 $ read-grid i j grid
                 v6 $ read-grid i (inc j) grid
                 v7 $ read-grid (inc i) (dec j) grid
-                v8 $ read-grid (inc i) (dec j) grid
+                v8 $ read-grid (inc i) j grid
                 v9 $ read-grid (inc i) (inc j) grid
                 pos $ +
-                  * v2 $ pow 2 6
-                  * v4 $ pow 2 4
-                  * v6 $ pow 2 2
+                  * v1 $ pow 2 8
+                  * v2 $ pow 2 7
+                  * v3 $ pow 2 6
+                  * v4 $ pow 2 5
+                  * v5 $ pow 2 4
+                  * v6 $ pow 2 3
+                  * v7 $ pow 2 2
                   * v8 $ pow 2 1
+                  * v9 $ pow 2 0
               ; echo "\"pos" pos
               nth rule pos
         |loop-trigger! $ quote
@@ -205,7 +230,7 @@
         |store $ quote
           def store $ {}
             :states $ {}
-            :rule $ repeat (pow 2 8) false
+            :rule $ repeat (pow 2 9) false
             :grid $ let{} (size) grid-settings
               repeat size $ repeat size false
       :proc $ quote ()
