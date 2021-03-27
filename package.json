@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@calcit/procs": "^0.2.105"
+    "@calcit/procs": "^0.2.107"
   },
   "devDependencies": {
     "fontfaceobserver-es": "^3.3.3",
