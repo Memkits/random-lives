@@ -16,7 +16,16 @@
         |site $ quote
           def site $ {} (:dev-ui "\"http://localhost:8100/main-fonts.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main-fonts.css") (:cdn-url "\"http://cdn.tiye.me/phlox-workflow/") (:title "\"Phlox") (:icon "\"http://cdn.tiye.me/logo/quamolit.png") (:storage-key "\"phlox-workflow")
         |grid-settings $ quote
-          def grid-settings $ {} (:size 40) (:unit 8) (:gap 1) (:interval 400)
+          def grid-settings $ {}
+            :size $ let
+                params $ new js/URLSearchParams (js/location.search.slice 1)
+              if
+                with-log $ .has params "\"size"
+                js/parseInt $ .get params "\"size"
+                , 60
+            :unit 8
+            :gap 1
+            :interval 400
       :proc $ quote ()
     |app.container $ {}
       :ns $ quote
