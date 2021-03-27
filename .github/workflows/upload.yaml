@@ -22,6 +22,8 @@ jobs:
         && git clone https://github.com/calcit-lang/lilac.git
         && git clone https://github.com/calcit-lang/memof.git
         && git clone https://github.com/Quamolit/phlox.calcit.git
+        && git clone https://github.com/Respo/respo.calcit.git
+        && git clone https://github.com/Respo/respo-ui.calcit.git
 
     - name: "compiles to js"
       run: >
