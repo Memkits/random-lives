@@ -34,6 +34,7 @@
           [] phlox.comp.button :refer $ [] comp-button
           [] app.config :refer $ [] grid-settings
           [] phlox.input :refer $ [] request-text!
+          [] memof.alias :refer $ [] memof-call
       :defs $ {}
         |load-rule! $ quote
           defn load-rule! (code d!)
@@ -60,6 +61,13 @@
         |read-rule $ quote
           defn read-rule (code)
             map (\ = % "\"1") (split code "\"")
+        |button-of-generate $ quote
+          def button-of-generate $ comp-button
+            {} (:text "\"Random Rule")
+              :position $ [] 10 80
+              :on $ {}
+                :pointertap $ fn (e d!)
+                  d! :set-rule $ generate-rule!
         |generate-grid! $ quote
           defn generate-grid! () $ let
               size $ :size grid-settings
@@ -68,74 +76,67 @@
                 ->> (range size)
                   map $ fn (j)
                     > (rand 1) 0.5
+        |style-code $ quote
+          def style-code $ {}
+            :fill $ hslx 240 80 80
+            :font-family "\"Monaco"
+            :font-size 8
+        |button-of-rule $ quote
+          def button-of-rule $ comp-button
+            {} (:text "\"Load rule")
+              :position $ [] 10 38
+              :on $ {}
+                :pointertap $ fn (e d!)
+                  request-text! e
+                    {} $ :textarea? true
+                    fn (e) (load-rule! e d!)
+        |button-of-dark $ quote
+          def button-of-dark $ comp-button
+            {} (:text "\"Dark Grids")
+              :position $ [] 10 220
+              :on $ {}
+                :pointertap $ fn (e d!)
+                  d! :set-grid $ generate-dark-grid!
         |comp-grid $ quote
           defn comp-grid (grid)
             container
               {} $ :position ([] 150 40)
               , & $ let{} (size unit gap) grid-settings
-                ->> (range size)
-                  map $ fn (i)
+                ->> row-template $ map
+                  fn (i)
                     container
                       {} $ :position
                         [] 0 $ * i (+ unit gap)
-                      , & $ ->> (range size)
+                      , & $ ->> row-template
                         map $ fn (j)
                           rect $ {}
                             :position $ []
                               * j $ + unit gap
                               , 0
                             :size $ [] unit unit
-                            :fill $ if (read-grid i j grid) (hslx 0 0 90) (hslx 0 0 20)
+                            :fill $ if (read-grid i j grid size) (hslx 0 0 90) (hslx 0 0 20)
         |comp-container $ quote
           defn comp-container (store)
             let
                 states $ :states store
                 cursor $ []
-                rule-text $ display-rule (:rule store)
+                rule-text $ memof-call display-rule (:rule store)
               container ({})
-                comp-button $ {} (:text "\"Random Rule")
-                  :position $ [] 10 80
-                  :on $ {}
-                    :pointertap $ fn (e d!)
-                      d! :set-rule $ generate-rule!
                 text $ {}
                   :text $ substr rule-text 0
                     / (count rule-text) 2
                   :position $ [] 10 10
-                  :style $ {}
-                    :fill $ hslx 240 80 80
-                    :font-family "\"Monaco"
-                    :font-size 8
+                  :style style-code
                 text $ {}
                   :text $ substr rule-text
                     / (count rule-text) 2
                   :position $ [] 10 20
-                  :style $ {}
-                    :fill $ hslx 240 80 80
-                    :font-family "\"Monaco"
-                    :font-size 8
-                comp-button $ {} (:text "\"Random Grids")
-                  :position $ [] 10 180
-                  :on $ {}
-                    :pointertap $ fn (e d!)
-                      d! :set-grid $ generate-grid!
-                comp-button $ {} (:text "\"Dark Grids")
-                  :position $ [] 10 220
-                  :on $ {}
-                    :pointertap $ fn (e d!)
-                      d! :set-grid $ generate-dark-grid!
-                comp-button $ {} (:text "\"Load rule")
-                  :position $ [] 10 38
-                  :on $ {}
-                    :pointertap $ fn (e d!)
-                      request-text! e
-                        {} $ :textarea? true
-                        fn (e) (load-rule! e d!)
-                comp-grid $ :grid store
+                  :style style-code
+                , button-of-generate button-of-random button-of-dark button-of-rule $ comp-grid (:grid store)
         |read-grid $ quote
-          defn read-grid (i j grid)
+          defn read-grid (i j grid ? size)
             let
-                size $ :size grid-settings
+                size $ either size (:size grid-settings)
                 length $ count grid
                 row $ cond
                     >= i $ count grid
@@ -149,6 +150,15 @@
                 (< j 0)
                   nth row $ dec (count row)
                 true $ nth row j
+        |button-of-random $ quote
+          def button-of-random $ comp-button
+            {} (:text "\"Random Grids")
+              :position $ [] 10 180
+              :on $ {}
+                :pointertap $ fn (e d!)
+                  d! :set-grid $ generate-grid!
+        |row-template $ quote
+          def row-template $ range (:size grid-settings)
         |generate-rule! $ quote
           defn generate-rule! () $ ->>
             repeat (pow 2 9) false
@@ -169,6 +179,7 @@
           [] app.config :refer $ [] dev? grid-settings
           [] app.updater :refer $ [] updater
           [] "\"fontfaceobserver-es" :as FontFaceObserver
+          [] memof.alias :refer $ [] memof-call
       :defs $ {}
         |dispatch! $ quote
           defn dispatch! (op op-data)
@@ -211,10 +222,10 @@
               grid $ :grid @*store
               rule $ :rule @*store
               size $ :size grid-settings
-            dispatch! :set-grid $ ->> (range size)
+            dispatch! :set-grid $ ->> row-template
               map $ fn (i)
-                ->> (range size)
-                  map $ fn (j) (iterate-next-cell i j grid rule)
+                ->> row-template $ map
+                  fn (j) (iterate-next-cell i j grid rule)
         |*store $ quote (defatom *store schema/store)
         |main! $ quote
           defn main! () (; js/console.log PIXI)
@@ -242,6 +253,8 @@
             reset! *loop $ js/setInterval loop-trigger! (:interval grid-settings)
             println "\"Code updated"
             render! (comp-container @*store) dispatch! $ {} (:swap? true)
+        |row-template $ quote
+          def row-template $ range (:size grid-settings)
       :proc $ quote ()
     |app.schema $ {}
       :ns $ quote
