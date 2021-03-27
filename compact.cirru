@@ -16,7 +16,7 @@
         |site $ quote
           def site $ {} (:dev-ui "\"http://localhost:8100/main-fonts.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main-fonts.css") (:cdn-url "\"http://cdn.tiye.me/phlox-workflow/") (:title "\"Phlox") (:icon "\"http://cdn.tiye.me/logo/quamolit.png") (:storage-key "\"phlox-workflow")
         |grid-settings $ quote
-          def grid-settings $ {} (:size 40) (:unit 13) (:gap 1) (:interval 400)
+          def grid-settings $ {} (:size 40) (:unit 8) (:gap 1) (:interval 400)
       :proc $ quote ()
     |app.container $ {}
       :ns $ quote
@@ -26,60 +26,39 @@
           [] app.config :refer $ [] grid-settings
           [] phlox.input :refer $ [] request-text!
       :defs $ {}
-        |comp-container $ quote
-          defn comp-container (store)
+        |load-rule! $ quote
+          defn load-rule! (code d!)
             let
-                states $ :states store
-                cursor $ []
-              container ({})
-                comp-button $ {} (:text "\"Random Rule")
-                  :position $ [] 10 40
-                  :on $ {}
-                    :pointertap $ fn (e d!)
-                      d! :set-rule $ generate-rule!
-                text $ {}
-                  :text $ display-rule (:rule store)
-                  :position $ [] 10 10
-                  :style $ {}
-                    :fill $ hslx 240 80 80
-                    :font-family "\"Monaco"
-                    :font-size 8
-                comp-button $ {} (:text "\"Random Grids")
-                  :position $ [] 10 120
-                  :on $ {}
-                    :pointertap $ fn (e d!)
-                      d! :set-grid $ generate-grid!
-                comp-button $ {} (:text "\"Dark Grids")
-                  :position $ [] 10 180
-                  :on $ {}
-                    :pointertap $ fn (e d!)
-                      d! :set-grid $ generate-dark-grid!
-                comp-button $ {} (:text "\"Load rule")
-                  :position $ [] 10 320
-                  :on $ {}
-                    :pointertap $ fn (e d!)
-                      request-text! e
-                        {} $ :textarea? true
-                        fn (code)
-                          let
-                              code $ trim code
-                            if
-                              = (pow 2 9) (count code)
-                              d! :set-rule $ read-rule code
-                              do
-                                with-log $ count code
-                                raise "\"invalid length"
-                comp-grid $ :grid store
-        |generate-rule! $ quote
-          defn generate-rule! () $ ->>
-            repeat (pow 2 9) false
-            map $ fn (x)
-              >= (rand 1) 0.5
-        |display-rule $ quote
-          defn display-rule (rule)
-            ->> rule
-              map $ fn (x) (if x 1 0)
-              join-str "\""
+                code $ trim code
+              if
+                = (pow 2 9) (count code)
+                d! :set-rule $ read-rule code
+                do
+                  with-log $ count code
+                  raise "\"invalid length"
+        |generate-dark-grid! $ quote
+          defn generate-dark-grid! () $ let
+              size $ :size grid-settings
+            ->> (range size)
+              map $ fn (i)
+                ->> (range size)
+                  map $ fn (j)
+                    <
+                      +
+                        js/Math.abs $ - i (/ size 2)
+                        js/Math.abs $ - j (/ size 2)
+                      , 4
+        |read-rule $ quote
+          defn read-rule (code)
+            map (\ = % "\"1") (split code "\"")
+        |generate-grid! $ quote
+          defn generate-grid! () $ let
+              size $ :size grid-settings
+            ->> (range size)
+              map $ fn (i)
+                ->> (range size)
+                  map $ fn (j)
+                    > (rand 1) 0.5
         |comp-grid $ quote
           defn comp-grid (grid)
             container
@@ -98,26 +77,52 @@
                               , 0
                             :size $ [] unit unit
                             :fill $ if (read-grid i j grid) (hslx 0 0 90) (hslx 0 0 20)
-        |generate-grid! $ quote
-          defn generate-grid! () $ let
-              size $ :size grid-settings
-            ->> (range size)
-              map $ fn (i)
-                ->> (range size)
-                  map $ fn (j)
-                    > (rand 1) 0.5
-        |generate-dark-grid! $ quote
-          defn generate-dark-grid! () $ let
-              size $ :size grid-settings
-            ->> (range size)
-              map $ fn (i)
-                ->> (range size)
-                  map $ fn (j)
-                    <
-                      +
-                        js/Math.abs $ - i (/ size 2)
-                        js/Math.abs $ - j (/ size 2)
-                      , 4
+        |comp-container $ quote
+          defn comp-container (store)
+            let
+                states $ :states store
+                cursor $ []
+                rule-text $ display-rule (:rule store)
+              container ({})
+                comp-button $ {} (:text "\"Random Rule")
+                  :position $ [] 10 80
+                  :on $ {}
+                    :pointertap $ fn (e d!)
+                      d! :set-rule $ generate-rule!
+                text $ {}
+                  :text $ substr rule-text 0
+                    / (count rule-text) 2
+                  :position $ [] 10 10
+                  :style $ {}
+                    :fill $ hslx 240 80 80
+                    :font-family "\"Monaco"
+                    :font-size 8
+                text $ {}
+                  :text $ substr rule-text
+                    / (count rule-text) 2
+                  :position $ [] 10 20
+                  :style $ {}
+                    :fill $ hslx 240 80 80
+                    :font-family "\"Monaco"
+                    :font-size 8
+                comp-button $ {} (:text "\"Random Grids")
+                  :position $ [] 10 180
+                  :on $ {}
+                    :pointertap $ fn (e d!)
+                      d! :set-grid $ generate-grid!
+                comp-button $ {} (:text "\"Dark Grids")
+                  :position $ [] 10 220
+                  :on $ {}
+                    :pointertap $ fn (e d!)
+                      d! :set-grid $ generate-dark-grid!
+                comp-button $ {} (:text "\"Load rule")
+                  :position $ [] 10 38
+                  :on $ {}
+                    :pointertap $ fn (e d!)
+                      request-text! e
+                        {} $ :textarea? true
+                        fn (e) (load-rule! e d!)
+                comp-grid $ :grid store
         |read-grid $ quote
           defn read-grid (i j grid)
             let
@@ -135,9 +140,16 @@
                 (< j 0)
                   nth row $ dec (count row)
                 true $ nth row j
-        |read-rule $ quote
-          defn read-rule (code)
-            map (\ = % "\"1") (split code "\"")
+        |generate-rule! $ quote
+          defn generate-rule! () $ ->>
+            repeat (pow 2 9) false
+            map $ fn (x)
+              >= (rand 1) 0.5
+        |display-rule $ quote
+          defn display-rule (rule)
+            ->> rule
+              map $ fn (x) (if x "\"1" "\"_")
+              join-str "\""
       :proc $ quote ()
     |app.main $ {}
       :ns $ quote
