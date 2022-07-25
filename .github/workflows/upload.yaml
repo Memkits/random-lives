@@ -3,7 +3,7 @@ name: Upload
 on:
   push:
     branches:
-      - master
+      - main
   pull_request: {}
 
 jobs:
@@ -11,23 +11,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: wget
-      run: mkdir ci-bin/ && wget -O ci-bin/cr_once http://repo.calcit-lang.org/binaries/linux/cr_once
-    - name: "permission"
-      run: chmod +x ci-bin/cr_once
+
+    - name: ACTIONS_ALLOW_UNSECURE_COMMANDS
+      id: ACTIONS_ALLOW_UNSECURE_COMMANDS
+      run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+
+    - name: add cr
+      run: |
+        mkdir -p $GITHUB_WORKSPACE/bin
+        wget -O $GITHUB_WORKSPACE/bin/cr https://github.com/calcit-lang/calcit/releases/download/0.6.1/cr
+        chmod +x $GITHUB_WORKSPACE/bin/cr
+        echo "::add-path::$GITHUB_WORKSPACE/bin"
 
     - name: "prepare modules"
       run: >
         mkdir -p ~/.config/calcit/modules/ && cd ~/.config/calcit/modules/
         && git clone https://github.com/calcit-lang/lilac.git
         && git clone https://github.com/calcit-lang/memof.git
-        && git clone https://github.com/Quamolit/phlox.calcit.git
+        && git clone https://github.com/Phlox-GL/phlox.git
         && git clone https://github.com/Respo/respo.calcit.git
         && git clone https://github.com/Respo/respo-ui.calcit.git
+        && git clone https://github.com/mvc-works/pointed-prompt.git
 
     - name: "compiles to js"
       run: >
-        ./ci-bin/cr_once --emit-js
+        cr --emit-js -1
         && cp assets/* js-out/
         && yarn && yarn vite build --base=./
 
