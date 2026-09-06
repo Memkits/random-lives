@@ -1,14 +1,15 @@
 {
   "dependencies": {
-    "@calcit/procs": "^0.6.1",
+    "@calcit/procs": "0.13.77",
     "@calcit/std": "^0.0.2",
     "@quamolit/phlox-utils": "^0.0.2"
   },
   "devDependencies": {
     "fontfaceobserver-es": "^3.3.3",
-    "pixi.js": "^6.5.1",
+    "pixi.js": "7.2.4",
     "shortid": "^2.2.16",
-    "vite": "^3.0.3"
+    "vite": "^8.2.2"
   },
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "packageManager": "yarn@4.12.0"
 }
