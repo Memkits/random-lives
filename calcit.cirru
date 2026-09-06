@@ -86,21 +86,22 @@
           :code $ quote
             defn comp-container (store)
               let
-                  states $ :states store
+                  store-map $ unsafe-coerce store 'Map
+                  states $ &map:get store-map :states
                   cursor $ []
-                  rule-text $ memof1-call display-rule (:rule store)
+                  rule-text $ memof1-call display-rule (&map:get store-map :rule)
                 container ({})
                   text $ {}
-                    :text $ .slice rule-text 0
+                    :text $ slice rule-text 0
                       / (count rule-text) 2
                     :position $ [] 10 10
                     :style style-code
                   text $ {}
-                    :text $ .slice rule-text
+                    :text $ slice rule-text
                       / (count rule-text) 2
                     :position $ [] 10 20
                     :style style-code
-                  , button-of-generate button-of-random button-of-dark button-of-rule $ comp-grid (:grid store)
+                  , button-of-generate button-of-random button-of-dark button-of-rule $ comp-grid (&map:get store-map :grid)
           :examples $ []
           :schema $ :: 'Dynamic
         'comp-grid $ %{} 'CodeEntry (:doc |)
@@ -135,33 +136,33 @@
         'generate-dark-grid! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn generate-dark-grid! () $ let
-                size $ :size grid-settings
-              ->> (range size)
+                size $ unsafe-coerce (&map:get grid-settings :size) 'Number
+              -> (range size)
                 map $ fn (i)
-                  ->> (range size)
+                  -> (range size)
                     map $ fn (j)
                       <
                         +
-                          js/Math.abs $ - i (/ size 2)
-                          js/Math.abs $ - j (/ size 2)
+                          abs $ - i (/ size 2)
+                          abs $ - j (/ size 2)
                         , 4
           :examples $ []
           :schema $ :: 'Dynamic
         'generate-grid! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn generate-grid! () $ let
-                size $ :size grid-settings
-              ->> (range size)
+                size $ unsafe-coerce (&map:get grid-settings :size) 'Number
+              -> (range size)
                 map $ fn (i)
-                  ->> (range size)
+                  -> (range size)
                     map $ fn (j)
                       > (rand 1) 0.5
           :examples $ []
           :schema $ :: 'Dynamic
         'generate-rule! $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defn generate-rule! () $ ->>
-              repeat (pow 2 9) false
+            defn generate-rule! () $ ->
+              repeat false $ pow 2 9
               map $ fn (x)
                 >= (rand 1) 0.5
           :examples $ []
@@ -202,12 +203,13 @@
         'read-rule $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn read-rule (code)
-              map (\ = % |1) (split code |)
+              map (split code |) (\ = % |1)
           :examples $ []
           :schema $ :: 'Dynamic
         'row-template $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def row-template $ range (:size grid-settings)
+            def row-template $ range
+              unsafe-coerce (&map:get grid-settings :size) 'Number
           :examples $ []
           :schema $ :: 'Dynamic
         'style-code $ %{} 'CodeEntry (:doc |)
@@ -310,7 +312,8 @@
                   render! (comp-container @*store) dispatch! $ {}
               add-watch *store :change $ fn (store prev)
                 render! (comp-container @*store) dispatch! $ {}
-              reset! *loop $ js/setInterval loop-trigger! (:interval grid-settings)
+              reset! *loop $ js/setInterval loop-trigger!
+                unsafe-coerce (&map:get grid-settings :interval) 'Number
               println "|App Started"
           :examples $ []
           :schema $ :: 'Dynamic
@@ -320,14 +323,16 @@
               add-watch *store :change $ fn (store prev)
                 render! (comp-container @*store) dispatch! $ {}
               js/clearInterval @*loop
-              reset! *loop $ js/setInterval loop-trigger! (:interval grid-settings)
+              reset! *loop $ js/setInterval loop-trigger!
+                unsafe-coerce (&map:get grid-settings :interval) 'Number
               println "|Code updated"
               render! (comp-container @*store) dispatch! $ {} (:swap? true)
           :examples $ []
           :schema $ :: 'Dynamic
         'row-template $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def row-template $ range (:size grid-settings)
+            def row-template $ range
+              unsafe-coerce (&map:get grid-settings :size) 'Number
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
@@ -346,7 +351,7 @@
           :code $ quote
             def store $ {}
               :states $ {}
-              :rule $ repeat (pow 2 9) false
+              :rule $ repeat false (pow 2 9)
               :grid $ let{} (size) grid-settings
                 repeat (repeat false size) size
           :examples $ []
@@ -368,7 +373,9 @@
                       [] cursor new-state
                       , op-data
                   assoc-in store
-                    concat ([] :states) cursor $ [] :data
+                    concat
+                      concat ([] :states) (unsafe-coerce cursor 'List)
+                      [] :data
                     , new-state
                 :hydrate-storage op-data
           :examples $ []
