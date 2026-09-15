@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@calcit/procs": "0.13.77",
+    "@calcit/procs": "0.14.17",
     "@calcit/std": "^0.0.2",
     "@pixi/core": "7.2.4",
     "@pixi/filter-drop-shadow": "^5.2.0",
