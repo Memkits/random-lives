@@ -5,7 +5,7 @@
   :entries $ {} $ :default
     {} (:description |) (:init-fn 'app.main/main!) (:mode :native) (:reload-fn 'app.main/reload!)
       :feature-policy $ {}
-      :modules $ [] |lilac/ |memof/ |phlox/ |respo.calcit/ |respo-ui.calcit/ |pointed-prompt/
+      :modules $ [] |memof/ |phlox/ |respo.calcit/ |respo-ui.calcit/ |pointed-prompt/
       :type-slots $ {}
   :files $ {}
     'app.config $ %{} 'FileEntry
