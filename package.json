@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@calcit/procs": "0.18.1",
+    "@calcit/procs": "0.22.0-alpha.3",
     "@calcit/std": "^0.0.2",
     "@pixi/core": "7.2.4",
     "@pixi/filter-drop-shadow": "^5.2.0",
@@ -16,6 +16,6 @@
   "devDependencies": {
     "vite": "^8.2.2"
   },
-  "version": "0.0.2",
+  "version": "0.0.3",
   "packageManager": "yarn@4.12.0"
 }
