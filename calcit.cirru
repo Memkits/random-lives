@@ -3,7 +3,7 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |app
   :entries $ {} $ :default
-    {} (:description |) (:init-fn 'app.main/main!) (:mode :native) (:reload-fn 'app.main/reload!)
+    {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |memof/ |phlox/ |respo.calcit/ |respo-ui.calcit/ |pointed-prompt/
       :type-slots $ {}
@@ -27,7 +27,8 @@
             cond
                 exists? js/window
                 , true
-              (exists? js/process) (not= |true js/process.env.release)
+              (exists? js/process)
+                not= |true $ unsafe-coerce js/process.env.release 'String
               true true
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
@@ -298,17 +299,6 @@
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
-        'global-fonts $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ def global-fonts
-            let
-                font-j $ .load $ new FontFaceObserver/default "|Josefin Sans"
-                font-h $ .load $ new FontFaceObserver/default |Hind
-                arr $ new js/Array
-              .push arr font-j
-              .push arr font-h
-              js/Promise.all arr
-          :examples $ []
-          :schema $ :: 'JsObject
         'iterate-next-cell $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn iterate-next-cell (i j grid rule)
             let
@@ -338,6 +328,19 @@
             :args $ [] 'Number 'Number
               :: 'List $ :: 'List 'Bool
               :: 'List 'Bool
+        'load-global-fonts $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn load-global-fonts ()
+            let
+                font-j $ .load $ new FontFaceObserver/default "|Josefin Sans"
+                font-h $ .load $ new FontFaceObserver/default |Hind
+                arr $ new js/Array
+              .push arr font-j
+              .push arr font-h
+              unsafe-coerce (js/Promise.all arr) 'JsObject
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'JsObject)
+            :args $ []
+            :features $ #{} :js-ffi
         'loop-trigger! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn loop-trigger! ()
             let
@@ -352,8 +355,9 @@
             :args $ []
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (; js/console.log PIXI)
-            -> global-fonts $ .then $ fn (fonts)
-              render! (comp-container @*store) dispatch! $ {}
+            -> (load-global-fonts)
+              .then $ fn (fonts)
+                render! (comp-container @*store) dispatch! $ {}
             add-watch *store :change $ fn (store prev)
               render! (comp-container @*store) dispatch! $ {}
             reset! *loop $ unsafe-coerce
@@ -403,10 +407,9 @@
           :schema $ :: 'StructDef
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
-            %{} Store
-              :states $ {}
-              :rule $ repeat false $ pow 2 9
-              :grid $ let{} (size) grid-settings $ repeat (repeat false size) size
+            Store :states ({}) :rule
+              repeat false $ pow 2 9
+              , :grid $ let{} (size) grid-settings $ repeat (repeat false size) size
           :examples $ []
           :schema $ :: 'app.schema/Store
       :ns $ %{} 'NsEntry (:doc |)
