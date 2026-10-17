@@ -1,7 +1,7 @@
-{} (:calcit-version |0.27.0) (:version |0.0.4)
+{} (:calcit-version |0.30.1-alpha.4) (:version |0.0.4)
   :dependencies $ {}
-    |Phlox-GL/phlox |0.7.11
-    |Respo/respo-ui.calcit |0.7.32-alpha.3
-    |Respo/respo.calcit |0.16.114-alpha.5
-    |calcit-lang/memof |0.0.36
-    |mvc-works/pointed-prompt |0.0.13
+    |Phlox-GL/phlox |0.7.15
+    |Respo/respo-ui.calcit |0.7.41
+    |Respo/respo.calcit |0.16.122
+    |mvc-works/pointed-prompt |0.0.19
+    |calcit-lang/js-ffi |0.2.3
