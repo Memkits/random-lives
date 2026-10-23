@@ -243,20 +243,20 @@
                 length $ count grid
                 row $ cond
                     >= i $ count grid
-                    option:unwrap-or (nth grid 0) ([])
+                    .unwrap-or (nth grid 0) ([])
                   (< i 0)
-                    option:unwrap-or
+                    .unwrap-or
                       nth grid $ dec $ count grid
                       []
-                  true $ option:unwrap-or (nth grid i) ([])
+                  true $ .unwrap-or (nth grid i) ([])
               cond
                   >= j $ count row
-                  option:unwrap-or (nth row 0) false
+                  .unwrap-or (nth row 0) false
                 (< j 0)
-                  option:unwrap-or
+                  .unwrap-or
                     nth row $ dec $ count row
                     , false
-                true $ option:unwrap-or (nth row j) false
+                true $ .unwrap-or (nth row j) false
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
             :args $ [] 'Number 'Number
@@ -334,7 +334,7 @@
                   * (if v8 1 0) (pow 2 1)
                   * (if v9 1 0) (pow 2 0)
               ; echo |pos pos
-              option:unwrap-or (nth rule pos) false
+              .unwrap-or (nth rule pos) false
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
             :args $ [] 'Number 'Number
