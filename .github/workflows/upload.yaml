@@ -57,7 +57,7 @@ jobs:
         test ! -e compact.cirru
         test ! -e package.cirru
         calcit calcit.cirru edit format
-        git diff --exit-code -- calcit.cirru
+        git diff --quiet --exit-code -- calcit.cirru
         calcit calcit.cirru --check-only --all-defs
         calcit calcit.cirru --check-only \
           --ns app.config --ns app.container --ns app.main \

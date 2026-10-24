@@ -129,11 +129,11 @@
                 rule-text $ cached-rule-text! $ :rule store
               container ({})
                 text $ {}
-                  :text $ slice rule-text 0 $ / (count rule-text) 2
+                  :text $ slice rule-text 0 $ / (.len rule-text) 2
                   :position $ [] 10 10
                   :style style-code
                 text $ {}
-                  :text $ slice rule-text $ / (count rule-text) 2
+                  :text $ slice rule-text $ / (.len rule-text) 2
                   :position $ [] 10 20
                   :style style-code
                 , button-of-generate button-of-random button-of-dark button-of-rule $ comp-grid $ :grid store
@@ -222,10 +222,10 @@
             let
                 code $ trim code
               if
-                = (pow 2 9) (count code)
+                = (pow 2 9) (.len code)
                 read-rule code
                 do
-                  dbg $ count code
+                  dbg $ .len code
                   raise "|invalid length"
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -240,21 +240,21 @@
         'read-grid-with-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-grid-with-size (i j grid size)
             let
-                length $ count grid
+                length $ .len grid
                 row $ cond
-                    >= i $ count grid
+                    >= i $ .len grid
                     .unwrap-or (nth grid 0) ([])
                   (< i 0)
                     .unwrap-or
-                      nth grid $ dec $ count grid
+                      nth grid $ dec $ .len grid
                       []
                   true $ .unwrap-or (nth grid i) ([])
               cond
-                  >= j $ count row
+                  >= j $ .len row
                   .unwrap-or (nth row 0) false
                 (< j 0)
                   .unwrap-or
-                    nth row $ dec $ count row
+                    nth row $ dec $ .len row
                     , false
                 true $ .unwrap-or (nth row j) false
           :examples $ []
