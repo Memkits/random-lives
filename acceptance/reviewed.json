@@ -1,0 +1,3046 @@
+[
+  {
+    "code": [
+      "def",
+      "calcit-dirname",
+      "|"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.$meta/calcit-dirname",
+    "js_ffi": null,
+    "schema": null,
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "calcit-filename",
+      "|calcit.cirru"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.$meta/calcit-filename",
+    "js_ffi": null,
+    "schema": null,
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defstruct",
+      "GridSettings",
+      [
+        ":size",
+        "'Number"
+      ],
+      [
+        ":unit",
+        "'Number"
+      ],
+      [
+        ":gap",
+        "'Number"
+      ],
+      [
+        ":interval",
+        "'Number"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.config/GridSettings",
+    "js_ffi": null,
+    "schema": "'StructDef",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "detect-dev?!",
+      [],
+      [
+        "cond",
+        [
+          [
+            "exists?",
+            "js/window"
+          ],
+          "true"
+        ],
+        [
+          [
+            "exists?",
+            "js/process"
+          ],
+          [
+            "not=",
+            "|true",
+            [
+              ".unwrap-or",
+              [
+                "get-env",
+                "|release"
+              ],
+              "|false"
+            ]
+          ]
+        ],
+        [
+          "true",
+          "true"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.config/detect-dev?!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Bool"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "dev?",
+      [
+        "detect-dev?!"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.config/dev?",
+    "js_ffi": null,
+    "schema": "'Bool",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "grid-settings",
+      [
+        "GridSettings",
+        ":size",
+        [
+          "read-grid-size!"
+        ],
+        ":unit",
+        "8",
+        ":gap",
+        "1",
+        ":interval",
+        "400"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.config/grid-settings",
+    "js_ffi": null,
+    "schema": "'app.config/GridSettings",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "read-grid-size!",
+      [],
+      [
+        "match",
+        [
+          "shared/search-params-get",
+          [
+            "shared/search-params-create",
+            [
+              ".-search",
+              [
+                "browser/location-host"
+              ]
+            ]
+          ],
+          "|size"
+        ],
+        [
+          [
+            ":none"
+          ],
+          "60"
+        ],
+        [
+          [
+            ":some",
+            "raw"
+          ],
+          [
+            "decode-map-as",
+            [
+              "js/parseInt",
+              "raw"
+            ],
+            "'Number"
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.config/read-grid-size!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Number"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "site",
+      [
+        "{}",
+        [
+          ":dev-ui",
+          "|http://localhost:8100/main-fonts.css"
+        ],
+        [
+          ":release-ui",
+          "|http://cdn.tiye.me/favored-fonts/main-fonts.css"
+        ],
+        [
+          ":cdn-url",
+          "|http://cdn.tiye.me/phlox-workflow/"
+        ],
+        [
+          ":title",
+          "|Phlox"
+        ],
+        [
+          ":icon",
+          "|http://cdn.tiye.me/logo/quamolit.png"
+        ],
+        [
+          ":storage-key",
+          "|phlox-workflow"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.config/site",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Map",
+      "'Tag",
+      "'String"
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defref",
+      "*rule-display",
+      [
+        "RuleDisplay",
+        ":rule",
+        [
+          "[]"
+        ],
+        ":text",
+        "|"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/*rule-display",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Ref",
+      "'app.container/RuleDisplay"
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defstruct",
+      "RuleDisplay",
+      [
+        ":rule",
+        [
+          "::",
+          "'List",
+          "'Bool"
+        ]
+      ],
+      [
+        ":text",
+        "'String"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/RuleDisplay",
+    "js_ffi": null,
+    "schema": "'StructDef",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "button-of-dark",
+      [
+        "comp-button",
+        [
+          "{}",
+          [
+            ":text",
+            "|Dark Grids"
+          ],
+          [
+            ":position",
+            [
+              "[]",
+              "10",
+              "220"
+            ]
+          ],
+          [
+            ":on",
+            [
+              "{}",
+              [
+                ":pointertap",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "d!",
+                    [
+                      "schema/Op",
+                      ":set-grid",
+                      [
+                        "generate-dark-grid!"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/button-of-dark",
+    "js_ffi": null,
+    "schema": "'phlox.schema/PhloxElement",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "button-of-generate",
+      [
+        "comp-button",
+        [
+          "{}",
+          [
+            ":text",
+            "|Random Rule"
+          ],
+          [
+            ":position",
+            [
+              "[]",
+              "10",
+              "80"
+            ]
+          ],
+          [
+            ":on",
+            [
+              "{}",
+              [
+                ":pointertap",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "d!",
+                    [
+                      "schema/Op",
+                      ":set-rule",
+                      [
+                        "generate-rule!"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/button-of-generate",
+    "js_ffi": null,
+    "schema": "'phlox.schema/PhloxElement",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "button-of-random",
+      [
+        "comp-button",
+        [
+          "{}",
+          [
+            ":text",
+            "|Random Grids"
+          ],
+          [
+            ":position",
+            [
+              "[]",
+              "10",
+              "180"
+            ]
+          ],
+          [
+            ":on",
+            [
+              "{}",
+              [
+                ":pointertap",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "d!",
+                    [
+                      "schema/Op",
+                      ":set-grid",
+                      [
+                        "generate-grid!"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/button-of-random",
+    "js_ffi": null,
+    "schema": "'phlox.schema/PhloxElement",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "button-of-rule",
+      [
+        "comp-button",
+        [
+          "{}",
+          [
+            ":text",
+            "|Load rule"
+          ],
+          [
+            ":position",
+            [
+              "[]",
+              "10",
+              "38"
+            ]
+          ],
+          [
+            ":on",
+            [
+              "{}",
+              [
+                ":pointertap",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "request-text!",
+                    "e",
+                    [
+                      "{}",
+                      [
+                        ":textarea?",
+                        "true"
+                      ]
+                    ],
+                    [
+                      "fn",
+                      [
+                        "code"
+                      ],
+                      [
+                        "d!",
+                        [
+                          "schema/Op",
+                          ":set-rule",
+                          [
+                            "parse-rule",
+                            "code"
+                          ]
+                        ]
+                      ],
+                      "&unit"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/button-of-rule",
+    "js_ffi": null,
+    "schema": "'phlox.schema/PhloxElement",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "cached-rule-text!",
+      [
+        "rule"
+      ],
+      [
+        "let",
+        [
+          [
+            "cached",
+            "@*rule-display"
+          ]
+        ],
+        [
+          "if",
+          [
+            "=",
+            "rule",
+            [
+              ":rule",
+              "cached"
+            ]
+          ],
+          [
+            ":text",
+            "cached"
+          ],
+          [
+            "let",
+            [
+              [
+                "value",
+                [
+                  "display-rule",
+                  "rule"
+                ]
+              ]
+            ],
+            [
+              "reset!",
+              "*rule-display",
+              [
+                "RuleDisplay",
+                ":rule",
+                "rule",
+                ":text",
+                "value"
+              ]
+            ],
+            "value"
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/cached-rule-text!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'List",
+            "'Bool"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "comp-container",
+      [
+        "store"
+      ],
+      [
+        "let",
+        [
+          [
+            "rule-text",
+            [
+              "cached-rule-text!",
+              [
+                ":rule",
+                "store"
+              ]
+            ]
+          ]
+        ],
+        [
+          "container",
+          [
+            "{}"
+          ],
+          [
+            "text",
+            [
+              "{}",
+              [
+                ":text",
+                [
+                  "slice",
+                  "rule-text",
+                  "0",
+                  [
+                    "/",
+                    [
+                      "count",
+                      "rule-text"
+                    ],
+                    "2"
+                  ]
+                ]
+              ],
+              [
+                ":position",
+                [
+                  "[]",
+                  "10",
+                  "10"
+                ]
+              ],
+              [
+                ":style",
+                "style-code"
+              ]
+            ]
+          ],
+          [
+            "text",
+            [
+              "{}",
+              [
+                ":text",
+                [
+                  "slice",
+                  "rule-text",
+                  [
+                    "/",
+                    [
+                      "count",
+                      "rule-text"
+                    ],
+                    "2"
+                  ]
+                ]
+              ],
+              [
+                ":position",
+                [
+                  "[]",
+                  "10",
+                  "20"
+                ]
+              ],
+              [
+                ":style",
+                "style-code"
+              ]
+            ]
+          ],
+          "button-of-generate",
+          "button-of-random",
+          "button-of-dark",
+          "button-of-rule",
+          [
+            "comp-grid",
+            [
+              ":grid",
+              "store"
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/comp-container",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'phlox.schema/PhloxElement"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'app.schema/Store"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "comp-grid",
+      [
+        "grid"
+      ],
+      [
+        "container",
+        [
+          "{}",
+          [
+            ":position",
+            [
+              "[]",
+              "150",
+              "40"
+            ]
+          ]
+        ],
+        "&",
+        [
+          "let",
+          [
+            [
+              "size",
+              [
+                ":size",
+                "grid-settings"
+              ]
+            ],
+            [
+              "unit",
+              [
+                ":unit",
+                "grid-settings"
+              ]
+            ],
+            [
+              "gap",
+              [
+                ":gap",
+                "grid-settings"
+              ]
+            ]
+          ],
+          [
+            "->",
+            "row-template",
+            [
+              "map",
+              [
+                "fn",
+                [
+                  "i"
+                ],
+                [
+                  "container",
+                  [
+                    "{}",
+                    [
+                      ":position",
+                      [
+                        "[]",
+                        "0",
+                        [
+                          "*",
+                          "i",
+                          [
+                            "+",
+                            "unit",
+                            "gap"
+                          ]
+                        ]
+                      ]
+                    ]
+                  ],
+                  "&",
+                  [
+                    "->",
+                    "row-template",
+                    [
+                      "map",
+                      [
+                        "fn",
+                        [
+                          "j"
+                        ],
+                        [
+                          "rect",
+                          [
+                            "{}",
+                            [
+                              ":position",
+                              [
+                                "[]",
+                                [
+                                  "*",
+                                  "j",
+                                  [
+                                    "+",
+                                    "unit",
+                                    "gap"
+                                  ]
+                                ],
+                                "0"
+                              ]
+                            ],
+                            [
+                              ":size",
+                              [
+                                "[]",
+                                "unit",
+                                "unit"
+                              ]
+                            ],
+                            [
+                              ":fill",
+                              [
+                                "if",
+                                [
+                                  "read-grid-with-size",
+                                  "i",
+                                  "j",
+                                  "grid",
+                                  "size"
+                                ],
+                                [
+                                  "hslx",
+                                  "0",
+                                  "0",
+                                  "90"
+                                ],
+                                [
+                                  "hslx",
+                                  "0",
+                                  "0",
+                                  "20"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/comp-grid",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'phlox.schema/PhloxElement"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'List",
+            [
+              "::",
+              "'List",
+              "'Bool"
+            ]
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "display-rule",
+      [
+        "rule"
+      ],
+      [
+        "->",
+        "rule",
+        [
+          "map",
+          [
+            "fn",
+            [
+              "x"
+            ],
+            [
+              "if",
+              "x",
+              "|1",
+              "|_"
+            ]
+          ]
+        ],
+        [
+          "join-string",
+          "|"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/display-rule",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'List",
+            "'Bool"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "generate-dark-grid!",
+      [],
+      [
+        "let",
+        [
+          [
+            "size",
+            [
+              ":size",
+              "grid-settings"
+            ]
+          ]
+        ],
+        [
+          "->",
+          [
+            "range",
+            "size"
+          ],
+          [
+            "map",
+            [
+              "fn",
+              [
+                "i"
+              ],
+              [
+                "->",
+                [
+                  "range",
+                  "size"
+                ],
+                [
+                  "map",
+                  [
+                    "fn",
+                    [
+                      "j"
+                    ],
+                    [
+                      "<",
+                      [
+                        "+",
+                        [
+                          "abs",
+                          [
+                            "-",
+                            "i",
+                            [
+                              "/",
+                              "size",
+                              "2"
+                            ]
+                          ]
+                        ],
+                        [
+                          "abs",
+                          [
+                            "-",
+                            "j",
+                            [
+                              "/",
+                              "size",
+                              "2"
+                            ]
+                          ]
+                        ]
+                      ],
+                      "4"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/generate-dark-grid!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          [
+            "::",
+            "'List",
+            "'Bool"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "generate-grid!",
+      [],
+      [
+        "let",
+        [
+          [
+            "size",
+            [
+              ":size",
+              "grid-settings"
+            ]
+          ]
+        ],
+        [
+          "->",
+          [
+            "range",
+            "size"
+          ],
+          [
+            "map",
+            [
+              "fn",
+              [
+                "i"
+              ],
+              [
+                "->",
+                [
+                  "range",
+                  "size"
+                ],
+                [
+                  "map",
+                  [
+                    "fn",
+                    [
+                      "j"
+                    ],
+                    [
+                      ">",
+                      [
+                        "decode-map-as",
+                        [
+                          "js/Math.random"
+                        ],
+                        "'Number"
+                      ],
+                      "0.5"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/generate-grid!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          [
+            "::",
+            "'List",
+            "'Bool"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "generate-rule!",
+      [],
+      [
+        "->",
+        [
+          "repeat",
+          "false",
+          [
+            "pow",
+            "2",
+            "9"
+          ]
+        ],
+        [
+          "map",
+          [
+            "fn",
+            [
+              "x"
+            ],
+            [
+              ">=",
+              [
+                "decode-map-as",
+                [
+                  "js/Math.random"
+                ],
+                "'Number"
+              ],
+              "0.5"
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/generate-rule!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'Bool"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "parse-rule",
+      [
+        "code"
+      ],
+      [
+        "let",
+        [
+          [
+            "code",
+            [
+              "trim",
+              "code"
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "=",
+            [
+              "pow",
+              "2",
+              "9"
+            ],
+            [
+              "count",
+              "code"
+            ]
+          ],
+          [
+            "read-rule",
+            "code"
+          ],
+          [
+            "do",
+            [
+              "dbg",
+              [
+                "count",
+                "code"
+              ]
+            ],
+            [
+              "raise",
+              "|invalid length"
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/parse-rule",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'Bool"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "read-grid",
+      [
+        "i",
+        "j",
+        "grid"
+      ],
+      [
+        "read-grid-with-size",
+        "i",
+        "j",
+        "grid",
+        [
+          ":size",
+          "grid-settings"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/read-grid",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Bool"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          "'Number",
+          [
+            "::",
+            "'List",
+            [
+              "::",
+              "'List",
+              "'Bool"
+            ]
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "read-grid-with-size",
+      [
+        "i",
+        "j",
+        "grid",
+        "size"
+      ],
+      [
+        "let",
+        [
+          [
+            "length",
+            [
+              "count",
+              "grid"
+            ]
+          ],
+          [
+            "row",
+            [
+              "cond",
+              [
+                [
+                  ">=",
+                  "i",
+                  [
+                    "count",
+                    "grid"
+                  ]
+                ],
+                [
+                  ".unwrap-or",
+                  [
+                    "nth",
+                    "grid",
+                    "0"
+                  ],
+                  [
+                    "[]"
+                  ]
+                ]
+              ],
+              [
+                [
+                  "<",
+                  "i",
+                  "0"
+                ],
+                [
+                  ".unwrap-or",
+                  [
+                    "nth",
+                    "grid",
+                    [
+                      "dec",
+                      [
+                        "count",
+                        "grid"
+                      ]
+                    ]
+                  ],
+                  [
+                    "[]"
+                  ]
+                ]
+              ],
+              [
+                "true",
+                [
+                  ".unwrap-or",
+                  [
+                    "nth",
+                    "grid",
+                    "i"
+                  ],
+                  [
+                    "[]"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "cond",
+          [
+            [
+              ">=",
+              "j",
+              [
+                "count",
+                "row"
+              ]
+            ],
+            [
+              ".unwrap-or",
+              [
+                "nth",
+                "row",
+                "0"
+              ],
+              "false"
+            ]
+          ],
+          [
+            [
+              "<",
+              "j",
+              "0"
+            ],
+            [
+              ".unwrap-or",
+              [
+                "nth",
+                "row",
+                [
+                  "dec",
+                  [
+                    "count",
+                    "row"
+                  ]
+                ]
+              ],
+              "false"
+            ]
+          ],
+          [
+            "true",
+            [
+              ".unwrap-or",
+              [
+                "nth",
+                "row",
+                "j"
+              ],
+              "false"
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/read-grid-with-size",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Bool"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          "'Number",
+          [
+            "::",
+            "'List",
+            [
+              "::",
+              "'List",
+              "'Bool"
+            ]
+          ],
+          "'Number"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "read-rule",
+      [
+        "code"
+      ],
+      [
+        "map",
+        [
+          "split",
+          "code",
+          "|"
+        ],
+        [
+          "fn",
+          [
+            "x"
+          ],
+          [
+            "=",
+            "x",
+            "|1"
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/read-rule",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'Bool"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "row-template",
+      [
+        "range",
+        [
+          ":size",
+          "grid-settings"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/row-template",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'List",
+      "'Number"
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "style-code",
+      [
+        "{}",
+        [
+          ":fill",
+          [
+            "hslx",
+            "240",
+            "80",
+            "80"
+          ]
+        ],
+        [
+          ":font-family",
+          "|Monaco"
+        ],
+        [
+          ":font-size",
+          "8"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.container/style-code",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Map",
+      "'Tag",
+      "'Dynamic"
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defref",
+      "*loop",
+      "0"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/*loop",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Ref",
+      "'Number"
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defref",
+      "*store",
+      "schema/store"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/*store",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Ref",
+      "'app.schema/Store"
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "dispatch!",
+      [
+        "op"
+      ],
+      [
+        "if",
+        [
+          "enum?",
+          "op"
+        ],
+        [
+          "reset!",
+          "*store",
+          [
+            "updater",
+            "@*store",
+            [
+              "schema/decode-op",
+              "op"
+            ]
+          ]
+        ],
+        [
+          "raise",
+          "|Expected Enum operation"
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/dispatch!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Dynamic"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "iterate-next-cell",
+      [
+        "i",
+        "j",
+        "grid",
+        "rule"
+      ],
+      [
+        "let",
+        [
+          [
+            "v1",
+            [
+              "read-grid",
+              [
+                "dec",
+                "i"
+              ],
+              [
+                "dec",
+                "j"
+              ],
+              "grid"
+            ]
+          ],
+          [
+            "v2",
+            [
+              "read-grid",
+              [
+                "dec",
+                "i"
+              ],
+              "j",
+              "grid"
+            ]
+          ],
+          [
+            "v3",
+            [
+              "read-grid",
+              [
+                "dec",
+                "i"
+              ],
+              [
+                "inc",
+                "j"
+              ],
+              "grid"
+            ]
+          ],
+          [
+            "v4",
+            [
+              "read-grid",
+              "i",
+              [
+                "dec",
+                "j"
+              ],
+              "grid"
+            ]
+          ],
+          [
+            "v5",
+            [
+              "read-grid",
+              "i",
+              "j",
+              "grid"
+            ]
+          ],
+          [
+            "v6",
+            [
+              "read-grid",
+              "i",
+              [
+                "inc",
+                "j"
+              ],
+              "grid"
+            ]
+          ],
+          [
+            "v7",
+            [
+              "read-grid",
+              [
+                "inc",
+                "i"
+              ],
+              [
+                "dec",
+                "j"
+              ],
+              "grid"
+            ]
+          ],
+          [
+            "v8",
+            [
+              "read-grid",
+              [
+                "inc",
+                "i"
+              ],
+              "j",
+              "grid"
+            ]
+          ],
+          [
+            "v9",
+            [
+              "read-grid",
+              [
+                "inc",
+                "i"
+              ],
+              [
+                "inc",
+                "j"
+              ],
+              "grid"
+            ]
+          ],
+          [
+            "pos",
+            [
+              "+",
+              [
+                "*",
+                [
+                  "if",
+                  "v1",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "8"
+                ]
+              ],
+              [
+                "*",
+                [
+                  "if",
+                  "v2",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "7"
+                ]
+              ],
+              [
+                "*",
+                [
+                  "if",
+                  "v3",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "6"
+                ]
+              ],
+              [
+                "*",
+                [
+                  "if",
+                  "v4",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "5"
+                ]
+              ],
+              [
+                "*",
+                [
+                  "if",
+                  "v5",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "4"
+                ]
+              ],
+              [
+                "*",
+                [
+                  "if",
+                  "v6",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "3"
+                ]
+              ],
+              [
+                "*",
+                [
+                  "if",
+                  "v7",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "2"
+                ]
+              ],
+              [
+                "*",
+                [
+                  "if",
+                  "v8",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "1"
+                ]
+              ],
+              [
+                "*",
+                [
+                  "if",
+                  "v9",
+                  "1",
+                  "0"
+                ],
+                [
+                  "pow",
+                  "2",
+                  "0"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          ";",
+          "echo",
+          "|pos",
+          "pos"
+        ],
+        [
+          ".unwrap-or",
+          [
+            "nth",
+            "rule",
+            "pos"
+          ],
+          "false"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/iterate-next-cell",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Bool"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          "'Number",
+          [
+            "::",
+            "'List",
+            [
+              "::",
+              "'List",
+              "'Bool"
+            ]
+          ],
+          [
+            "::",
+            "'List",
+            "'Bool"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "load-global-fonts",
+      [],
+      [
+        "let",
+        [
+          [
+            "font-j",
+            [
+              ".!load",
+              [
+                "unsafe-coerce",
+                [
+                  "new",
+                  "FontFaceObserver/default",
+                  "|Josefin Sans"
+                ],
+                "phlox.core/FontFaceObserverHost"
+              ]
+            ]
+          ],
+          [
+            "font-h",
+            [
+              ".!load",
+              [
+                "unsafe-coerce",
+                [
+                  "new",
+                  "FontFaceObserver/default",
+                  "|Hind"
+                ],
+                "phlox.core/FontFaceObserverHost"
+              ]
+            ]
+          ]
+        ],
+        [
+          "unsafe-coerce",
+          [
+            "js/Promise.all",
+            [
+              "to-js-data",
+              [
+                "[]",
+                "font-j",
+                "font-h"
+              ]
+            ]
+          ],
+          "phlox.core/PromiseHost"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/load-global-fonts",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'phlox.core/PromiseHost"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "loop-trigger!",
+      [],
+      [
+        "let",
+        [
+          [
+            "grid",
+            [
+              ":grid",
+              "@*store"
+            ]
+          ],
+          [
+            "rule",
+            [
+              ":rule",
+              "@*store"
+            ]
+          ]
+        ],
+        [
+          "dispatch!",
+          [
+            "schema/Op",
+            ":set-grid",
+            [
+              "->",
+              "row-template",
+              [
+                "map",
+                [
+                  "fn",
+                  [
+                    "i"
+                  ],
+                  [
+                    "->",
+                    "row-template",
+                    [
+                      "map",
+                      [
+                        "fn",
+                        [
+                          "j"
+                        ],
+                        [
+                          "iterate-next-cell",
+                          "i",
+                          "j",
+                          "grid",
+                          "rule"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/loop-trigger!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "main!",
+      [],
+      [
+        ".!then",
+        [
+          "load-global-fonts"
+        ],
+        [
+          "fn",
+          [
+            "fonts"
+          ],
+          [
+            "render!",
+            [
+              "comp-container",
+              "@*store"
+            ],
+            "dispatch!",
+            [
+              "{}"
+            ]
+          ],
+          "&unit"
+        ]
+      ],
+      [
+        "add-watch!",
+        "*store",
+        ":change",
+        [
+          "fn",
+          [
+            "store",
+            "prev"
+          ],
+          [
+            "render!",
+            [
+              "comp-container",
+              "@*store"
+            ],
+            "dispatch!",
+            [
+              "{}"
+            ]
+          ],
+          "&unit"
+        ]
+      ],
+      [
+        "reset!",
+        "*loop",
+        [
+          "browser/set-interval!",
+          "loop-trigger!",
+          [
+            ":interval",
+            "grid-settings"
+          ]
+        ]
+      ],
+      [
+        "println",
+        "|App Started"
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/main!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "reload!",
+      [],
+      [
+        "remove-watch!",
+        "*store",
+        ":change"
+      ],
+      [
+        "add-watch!",
+        "*store",
+        ":change",
+        [
+          "fn",
+          [
+            "store",
+            "prev"
+          ],
+          [
+            "render!",
+            [
+              "comp-container",
+              "@*store"
+            ],
+            "dispatch!",
+            [
+              "{}"
+            ]
+          ],
+          "&unit"
+        ]
+      ],
+      [
+        "browser/clear-interval!",
+        "@*loop"
+      ],
+      [
+        "reset!",
+        "*loop",
+        [
+          "browser/set-interval!",
+          "loop-trigger!",
+          [
+            ":interval",
+            "grid-settings"
+          ]
+        ]
+      ],
+      [
+        "println",
+        "|Code updated"
+      ],
+      [
+        "render!",
+        [
+          "comp-container",
+          "@*store"
+        ],
+        "dispatch!",
+        [
+          "{}",
+          [
+            ":swap?",
+            "true"
+          ]
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/reload!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "row-template",
+      [
+        "range",
+        [
+          ":size",
+          "grid-settings"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.main/row-template",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'List",
+      "'Number"
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defenum",
+      "Op",
+      [
+        ":set-rule",
+        [
+          "::",
+          "'List",
+          "'Bool"
+        ]
+      ],
+      [
+        ":set-grid",
+        [
+          "::",
+          "'List",
+          [
+            "::",
+            "'List",
+            "'Bool"
+          ]
+        ]
+      ],
+      [
+        ":states",
+        [
+          "::",
+          "'List",
+          "'Dynamic"
+        ],
+        "'Dynamic"
+      ],
+      [
+        ":hydrate-storage",
+        "'app.schema/Store"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.schema/Op",
+    "js_ffi": null,
+    "schema": "'EnumDef",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defstruct",
+      "Store",
+      [
+        ":states",
+        [
+          "::",
+          "'Map",
+          "'Dynamic",
+          "'Dynamic"
+        ]
+      ],
+      [
+        ":rule",
+        [
+          "::",
+          "'List",
+          "'Bool"
+        ]
+      ],
+      [
+        ":grid",
+        [
+          "::",
+          "'List",
+          [
+            "::",
+            "'List",
+            "'Bool"
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.schema/Store",
+    "js_ffi": null,
+    "schema": "'StructDef",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "decode-op",
+      [
+        "op"
+      ],
+      [
+        "match",
+        "op",
+        [
+          [
+            ":set-rule",
+            "rule"
+          ],
+          [
+            "Op",
+            ":set-rule",
+            [
+              "decode-map-as",
+              "rule",
+              [
+                "::",
+                "'List",
+                "'Bool"
+              ]
+            ]
+          ]
+        ],
+        [
+          [
+            ":set-grid",
+            "grid"
+          ],
+          [
+            "Op",
+            ":set-grid",
+            [
+              "decode-map-as",
+              "grid",
+              [
+                "::",
+                "'List",
+                [
+                  "::",
+                  "'List",
+                  "'Bool"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          [
+            ":states",
+            "cursor",
+            "data"
+          ],
+          [
+            "Op",
+            ":states",
+            [
+              "decode-map-as",
+              "cursor",
+              [
+                "::",
+                "'List",
+                "'Dynamic"
+              ]
+            ],
+            "data"
+          ]
+        ],
+        [
+          [
+            ":hydrate-storage",
+            "data"
+          ],
+          [
+            "Op",
+            ":hydrate-storage",
+            [
+              "decode-map-as",
+              [
+                "if",
+                [
+                  "struct?",
+                  "data"
+                ],
+                [
+                  "&struct:to-map",
+                  "data"
+                ],
+                "data"
+              ],
+              "'app.schema/Store"
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.schema/decode-op",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'app.schema/Op"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Enum"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "store",
+      [
+        "Store",
+        ":states",
+        [
+          "{}"
+        ],
+        ":rule",
+        [
+          "repeat",
+          "false",
+          [
+            "pow",
+            "2",
+            "9"
+          ]
+        ],
+        ":grid",
+        [
+          "let",
+          [
+            [
+              "size",
+              [
+                ":size",
+                "grid-settings"
+              ]
+            ]
+          ],
+          [
+            "repeat",
+            [
+              "repeat",
+              "false",
+              "size"
+            ],
+            "size"
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.schema/store",
+    "js_ffi": null,
+    "schema": "'app.schema/Store",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "updater",
+      [
+        "store",
+        "op"
+      ],
+      [
+        "match",
+        "op",
+        [
+          [
+            ":set-rule",
+            "rule"
+          ],
+          [
+            "assoc",
+            "store",
+            ":rule",
+            "rule"
+          ]
+        ],
+        [
+          [
+            ":set-grid",
+            "grid"
+          ],
+          [
+            "assoc",
+            "store",
+            ":grid",
+            "grid"
+          ]
+        ],
+        [
+          [
+            ":states",
+            "cursor",
+            "data"
+          ],
+          [
+            "assoc",
+            "store",
+            ":states",
+            [
+              "decode-map-as",
+              [
+                "assoc-in",
+                [
+                  ":states",
+                  "store"
+                ],
+                [
+                  "conj",
+                  "cursor",
+                  ":data"
+                ],
+                "data"
+              ],
+              [
+                "::",
+                "'Map",
+                "'Dynamic",
+                "'Dynamic"
+              ]
+            ]
+          ]
+        ],
+        [
+          [
+            ":hydrate-storage",
+            "data"
+          ],
+          "data"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "app.updater/updater",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'app.schema/Store"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'app.schema/Store",
+          "'app.schema/Op"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  }
+]
