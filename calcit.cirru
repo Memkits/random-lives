@@ -129,11 +129,12 @@
                 rule-text $ cached-rule-text! $ :rule store
               container ({})
                 text $ {}
-                  :text $ slice rule-text 0 $ / (.len rule-text) 2
+                  :text $ .slice rule-text 0 $ Option :some
+                    / (.len rule-text) 2
                   :position $ [] 10 10
                   :style style-code
                 text $ {}
-                  :text $ slice rule-text $ / (.len rule-text) 2
+                  :text $ .slice rule-text $ / (.len rule-text) 2
                   :position $ [] 10 20
                   :style style-code
                 , button-of-generate button-of-random button-of-dark button-of-rule $ comp-grid $ :grid store
@@ -343,8 +344,8 @@
         'load-global-fonts $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn load-global-fonts ()
             let
-                font-j $ .!load $ unsafe-coerce (new FontFaceObserver/default "|Josefin Sans") phlox.core/FontFaceObserverHost
-                font-h $ .!load $ unsafe-coerce (new FontFaceObserver/default |Hind) phlox.core/FontFaceObserverHost
+                font-j $ .!load $ unsafe-coerce (new FontFaceObserver "|Josefin Sans") phlox.core/FontFaceObserverHost
+                font-h $ .!load $ unsafe-coerce (new FontFaceObserver |Hind) phlox.core/FontFaceObserverHost
               unsafe-coerce
                 js/Promise.all $ to-js-data $ [] font-j font-h
                 , phlox.core/PromiseHost
@@ -406,7 +407,7 @@
             app.schema :as schema
             app.config :refer $ dev? grid-settings
             app.updater :refer $ updater
-            |fontfaceobserver-es :as FontFaceObserver
+            |fontfaceobserver-es :default FontFaceObserver
             js-ffi.browser :as browser
     'app.schema $ %{} 'FileEntry
       :defs $ {}
