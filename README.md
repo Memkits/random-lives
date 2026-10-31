@@ -15,7 +15,7 @@ Demo http://repo.memkits.org/random-lives/?size=60
 
 ### 开发与验证
 
-使用 Node.js 24、Yarn 4.18.0。npm 新解析版本等待 60 分钟，移除旧 procs 单包豁免；已有 immutable 锁版本不重新计算等待时间。
+使用 Node.js 24、Yarn 4.18.0。新解析出的 npm 包版本必须已发布至少 60 分钟；本仓库移除旧 procs 单包豁免；已有 immutable 锁版本不重新计算等待时间。
 
 ```bash
 caps --strict --ci
