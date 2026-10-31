@@ -13,7 +13,7 @@
         'GridSettings $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct GridSettings (:size 'Number) (:unit 'Number) (:gap 'Number) (:interval 'Number)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'detect-dev?! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn detect-dev?! ()
             cond
@@ -23,18 +23,16 @@
                 not= |true $ .unwrap-or (get-env |release) |false
               true true
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Bool) (:features :js-ffi)
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev? (detect-dev?!)
           :examples $ []
-          :schema $ :: 'Bool
+          :schema $ quote Bool
         'grid-settings $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def grid-settings
             GridSettings :size (read-grid-size!) :unit 8 :gap 1 :interval 400
           :examples $ []
-          :schema $ :: 'app.config/GridSettings
+          :schema $ quote app.config/GridSettings
         'read-grid-size! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-grid-size! ()
             match
@@ -45,14 +43,12 @@
               (:some raw)
                 decode-map-as (js/parseInt raw) 'Number
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Number) (:features :js-ffi)
         'site $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def site
             {} (:dev-ui |http://localhost:8100/main-fonts.css) (:release-ui |http://cdn.tiye.me/favored-fonts/main-fonts.css) (:cdn-url |http://cdn.tiye.me/phlox-workflow/) (:title |Phlox) (:icon |http://cdn.tiye.me/logo/quamolit.png) (:storage-key |phlox-workflow)
           :examples $ []
-          :schema $ :: 'Map 'Tag 'String
+          :schema $ quote $ Map Tag String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.config
           :require (js-ffi.shared :as shared) (js-ffi.browser :as browser)
@@ -62,13 +58,13 @@
           :code $ quote $ defref *rule-display
             RuleDisplay :rule ([]) :text |
           :examples $ []
-          :schema $ :: 'Ref 'app.container/RuleDisplay
+          :schema $ quote $ Ref app.container/RuleDisplay
         'RuleDisplay $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct RuleDisplay
-            :rule $ :: 'List 'Bool
+            :rule $ quote $ List Bool
             :text 'String
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'button-of-dark $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def button-of-dark
             comp-button $ {} (:text "|Dark Grids")
@@ -77,7 +73,7 @@
                 fn (e d!)
                   d! $ schema/Op :set-grid $ generate-dark-grid!
           :examples $ []
-          :schema $ :: 'phlox.schema/PhloxElement
+          :schema $ quote phlox.schema/PhloxElement
         'button-of-generate $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def button-of-generate
             comp-button $ {} (:text "|Random Rule")
@@ -86,7 +82,7 @@
                 fn (e d!)
                   d! $ schema/Op :set-rule $ generate-rule!
           :examples $ []
-          :schema $ :: 'phlox.schema/PhloxElement
+          :schema $ quote phlox.schema/PhloxElement
         'button-of-random $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def button-of-random
             comp-button $ {} (:text "|Random Grids")
@@ -95,7 +91,7 @@
                 fn (e d!)
                   d! $ schema/Op :set-grid $ generate-grid!
           :examples $ []
-          :schema $ :: 'phlox.schema/PhloxElement
+          :schema $ quote phlox.schema/PhloxElement
         'button-of-rule $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def button-of-rule
             comp-button $ {} (:text "|Load rule")
@@ -108,7 +104,7 @@
                       d! $ schema/Op :set-rule $ parse-rule code
                       , &unit
           :examples $ []
-          :schema $ :: 'phlox.schema/PhloxElement
+          :schema $ quote phlox.schema/PhloxElement
         'cached-rule-text! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn cached-rule-text! (rule)
             let
@@ -121,8 +117,7 @@
                   reset! *rule-display $ RuleDisplay :rule rule :text value
                   , value
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] $ :: 'List 'Bool
+          :schema $ quote $ Fn (List Bool) (-> String)
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
             let
@@ -139,8 +134,7 @@
                   :style style-code
                 , button-of-generate button-of-random button-of-dark button-of-rule $ comp-grid $ :grid store
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'app.schema/Store
+          :schema $ quote $ Fn app.schema/Store (-> phlox.schema/PhloxElement)
         'comp-grid $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-grid (grid)
             container
@@ -162,16 +156,16 @@
                           :size $ [] unit unit
                           :fill $ if (read-grid-with-size i j grid size) (hslx 0 0 90) (hslx 0 0 20)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
-            :args $ [] $ :: 'List (:: 'List 'Bool)
+          :schema $ quote $ Fn
+            List $ List Bool
+            -> phlox.schema/PhloxElement
         'display-rule $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn display-rule (rule)
             -> rule
               map $ fn (x) (if x |1 |_)
               join-string |
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] $ :: 'List 'Bool
+          :schema $ quote $ Fn (List Bool) (-> String)
         'generate-dark-grid! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn generate-dark-grid! ()
             let
@@ -186,9 +180,8 @@
                           abs $ - j $ / size 2
                         , 4
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ []
-            :return $ :: 'List $ :: 'List 'Bool
+          :schema $ quote $ Fn
+            -> $ List $ List Bool
         'generate-grid! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn generate-grid! ()
             let
@@ -201,10 +194,9 @@
                         decode-map-as (js/Math.random) 'Number
                         , 0.5
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ []
-            :features $ #{} :js-ffi
-            :return $ :: 'List $ :: 'List 'Bool
+          :schema $ quote $ Fn
+            -> $ List $ List Bool
+            :features :js-ffi
         'generate-rule! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn generate-rule! ()
             ->
@@ -214,10 +206,9 @@
                   decode-map-as (js/Math.random) 'Number
                   , 0.5
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ []
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'Bool
+          :schema $ quote $ Fn
+            -> $ List Bool
+            :features :js-ffi
         'parse-rule $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn parse-rule (code)
             let
@@ -229,15 +220,15 @@
                   dbg $ .len code
                   raise "|invalid length"
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'String
-            :return $ :: 'List 'Bool
+          :schema $ quote $ Fn String
+            -> $ List Bool
         'read-grid $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-grid (i j grid)
             read-grid-with-size i j grid $ :size grid-settings
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Number 'Number $ :: 'List (:: 'List 'Bool)
+          :schema $ quote $ Fn Number Number
+            List $ List Bool
+            -> Bool
         'read-grid-with-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-grid-with-size (i j grid size)
             let
@@ -259,23 +250,21 @@
                     , false
                 true $ .unwrap-or (nth row j) false
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Number 'Number
-              :: 'List $ :: 'List 'Bool
-              , 'Number
+          :schema $ quote $ Fn Number Number
+            List $ List Bool
+            , Number (-> Bool)
         'read-rule $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-rule (code)
             map (split code |)
               fn (x) (= x |1)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'String
-            :return $ :: 'List 'Bool
+          :schema $ quote $ Fn String
+            -> $ List Bool
         'row-template $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def row-template
             range $ :size grid-settings
           :examples $ []
-          :schema $ :: 'List 'Number
+          :schema $ quote $ List Number
         'style-code $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-code
             {}
@@ -283,7 +272,7 @@
               :font-family |Monaco
               :font-size 8
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.container
           :require
@@ -297,11 +286,11 @@
         '*loop $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *loop 0
           :examples $ []
-          :schema $ :: 'Ref 'Number
+          :schema $ quote $ Ref Number
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store schema/store
           :examples $ []
-          :schema $ :: 'Ref 'app.schema/Store
+          :schema $ quote $ Ref app.schema/Store
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             if (enum? op)
@@ -309,9 +298,7 @@
               raise "|Expected Enum operation"
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
         'iterate-next-cell $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn iterate-next-cell (i j grid rule)
             let
@@ -337,10 +324,10 @@
               ; echo |pos pos
               .unwrap-or (nth rule pos) false
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Number 'Number
-              :: 'List $ :: 'List 'Bool
-              :: 'List 'Bool
+          :schema $ quote $ Fn Number Number
+            List $ List Bool
+            List Bool
+            -> Bool
         'load-global-fonts $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn load-global-fonts ()
             let
@@ -350,9 +337,7 @@
                 js/Promise.all $ to-js-data $ [] font-j font-h
                 , phlox.core/PromiseHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.core/PromiseHost)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> phlox.core/PromiseHost) (:features :js-ffi)
         'loop-trigger! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn loop-trigger! ()
             let
@@ -362,8 +347,7 @@
                 map $ fn (i)
                   -> row-template $ map $ fn (j) (iterate-next-cell i j grid rule)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             .!then (load-global-fonts)
@@ -377,9 +361,7 @@
             println "|App Started"
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (remove-watch! *store :change)
             add-watch! *store :change $ fn (store prev)
@@ -391,14 +373,12 @@
             render! (comp-container @*store) dispatch! $ {} $ :swap? true
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'row-template $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def row-template
             range $ :size grid-settings
           :examples $ []
-          :schema $ :: 'List 'Number
+          :schema $ quote $ List Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
@@ -413,19 +393,21 @@
       :defs $ {}
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op
-            :set-rule $ :: 'List 'Bool
-            :set-grid $ :: 'List $ :: 'List 'Bool
-            :states (:: 'List 'Dynamic) 'Dynamic
+            :set-rule $ quote $ List Bool
+            :set-grid $ quote $ List (List Bool)
+            :states
+              quote $ List Dynamic
+              , 'Dynamic
             :hydrate-storage 'app.schema/Store
           :examples $ []
-          :schema $ :: 'EnumDef
+          :schema $ quote EnumDef
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store
-            :states $ :: 'Map 'Dynamic 'Dynamic
-            :rule $ :: 'List 'Bool
-            :grid $ :: 'List $ :: 'List 'Bool
+            :states $ quote $ Map Dynamic Dynamic
+            :rule $ quote $ List Bool
+            :grid $ quote $ List (List Bool)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'decode-op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-op (op)
             match op
@@ -442,8 +424,7 @@
                   if (struct? data) (&struct:to-map data) data
                   , 'app.schema/Store
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'app.schema/Op)
-            :args $ [] 'Enum
+          :schema $ quote $ Fn Enum (-> app.schema/Op)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :states ({}) :rule
@@ -452,7 +433,7 @@
                   size $ :size grid-settings
                 repeat (repeat false size) size
           :examples $ []
-          :schema $ :: 'app.schema/Store
+          :schema $ quote app.schema/Store
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.schema
           :require $ app.config :refer $ grid-settings
@@ -469,7 +450,6 @@
                   :: 'Map 'Dynamic 'Dynamic
               (:hydrate-storage data) data
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'app.schema/Store)
-            :args $ [] 'app.schema/Store 'app.schema/Op
+          :schema $ quote $ Fn app.schema/Store app.schema/Op (-> app.schema/Store)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
