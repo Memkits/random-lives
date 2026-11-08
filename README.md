@@ -7,11 +7,9 @@ Demo http://repo.memkits.org/random-lives/?size=60
 
 ### 使用者影响
 
-开发和 CI 配对升级为正式 Calcit / procs **0.32.1**，通过官方工具迁移新类型标注语法。直接依赖为精确正式 Phlox 0.8.0、Respo 0.17.1、UI 0.9.0、Pointed Prompt 0.0.24、JS-FFI 0.2.9；传递 Touch Control 0.0.35、Router 0.9.0-alpha.4，不能声称整图均为正式版。请重新严格安装依赖、重启服务并刷新。
+本地开发使用正式 Calcit 和 `@calcit/procs` **0.38.0**。请重新安装依赖、构建并刷新。512 位规则、网格环绕、400ms 更新和原前端地址保持原行为。
 
-39 个项目定义的完整官方视图与规范化后的原 main 一致，代码、schema 和附带测试数据均未改变。保留 512 位规则、网格环绕、单条 RuleDisplay 缓存、400ms 周期、名义 Store / GridSettings / Op、受检开放 dispatch 和混合 key 状态边界。项目版本仍为 0.0.4，不发布新项目版本。
-
-**渲染风险仍未解决：** [Phlox #71](https://github.com/Phlox-GL/phlox/issues/71) 的静态控件/文字在更新后消失现象，在本轮 IAB 与普通 Chrome 中都观察到了。原 main 的精确 Calcit 0.31.0 CI artifact 在同一 Chrome 中也复现，因此不是本轮新增；不能继续只称其为 IAB 风险，也不能把静态门禁通过当作完整运行验收。没有加入强制重建、清缓存或猜测性的 renderer 修复。
+正式依赖为 Phlox 0.9.3、Respo 0.19.5、UI 0.15.2、Pointed Prompt 0.0.27、JS FFI 0.2.13，传递依赖为 Touch Control 0.0.39 和 Router 0.12.2。模拟循环直接派发具名 `Op`，Phlox 的开放事件在单一入口解码。两种字体继续等待加载，加载过程使用 Phlox 的字体接口。
 
 ### 开发与验证
 
@@ -28,7 +26,7 @@ VITE_BASE_URL=./ yarn build
 
 `yarn dev` 编译一次再启动 Vite；另开终端运行 `calcit -w` 进行实时编译，无需 concurrently。`?size=6` 用于小网格浏览，缺少 size 时仍为 60，已有查询值仍按 parseInt 读取。
 
-本轮通过 203 项全定义、五个 namespace 共 39 项公开定义、完整 strict（diagnostics=[]）、deprecated-call=0、canonical、Caps 七模块严格解析与工具链配对、immutable 安装及相对路径构建。原项目没有附带测试，不把空测试选择计为回归覆盖。实际页面观察了合成全零/全一规则载入、随机网格触发、规则对应的 36 格变化及刷新初始显示，同时保留上述可见性缺陷；未声称全部按钮、全部 512 种邻域或所有尺寸均验收通过。
+0.38.0 候选通过全部 194 个定义、40 个应用定义、完整 strict、原弃用调用检查和前端构建。Chrome 使用本地字体替身，在 `?size=6` 验证随机规则、随机网格、全暗网格、提交合成的 512 位规则和刷新恢复。连续更新后测得按钮文字仍有实际像素。更早版本观察到的显示差异继续由 [Phlox #71](https://github.com/Phlox-GL/phlox/issues/71) 跟踪。
 
 仅维护 `calcit.cirru` / `deps.cirru`，继续禁止 compact/package 回流。原 CI 的全部定义、公开 namespace、完整 strict 和弃用调用门禁保持；未放宽类型或增加 checker。
 

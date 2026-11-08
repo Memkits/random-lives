@@ -11,7 +11,7 @@
     'app.config $ %{} 'FileEntry
       :defs $ {}
         'GridSettings $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct GridSettings (:size 'Number) (:unit 'Number) (:gap 'Number) (:interval 'Number)
+          :code $ quote $ defstruct GridSettings (:size Number) (:unit Number) (:gap Number) (:interval Number)
           :examples $ []
           :schema $ quote StructDef
         'detect-dev?! $ %{} 'CodeEntry (:doc |)
@@ -61,8 +61,8 @@
           :schema $ quote $ Ref app.container/RuleDisplay
         'RuleDisplay $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct RuleDisplay
-            :rule $ quote $ List Bool
-            :text 'String
+            :rule $ List Bool
+            :text String
           :examples $ []
           :schema $ quote StructDef
         'button-of-dark $ %{} 'CodeEntry (:doc |)
@@ -293,12 +293,10 @@
           :schema $ quote $ Ref app.schema/Store
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
-            if (enum? op)
-              reset! *store $ updater @*store $ schema/decode-op op
-              raise "|Expected Enum operation"
+            reset! *store $ updater @*store op
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn app.schema/Op (-> Unit)
         'iterate-next-cell $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn iterate-next-cell (i j grid rule)
             let
@@ -331,11 +329,11 @@
         'load-global-fonts $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn load-global-fonts ()
             let
-                font-j $ .!load $ unsafe-coerce (new FontFaceObserver "|Josefin Sans") phlox.core/FontFaceObserverHost
-                font-h $ .!load $ unsafe-coerce (new FontFaceObserver |Hind) phlox.core/FontFaceObserverHost
-              unsafe-coerce
+                font-j $ ffi-load-font $ new FontFaceObserver "|Josefin Sans"
+                font-h $ ffi-load-font $ new FontFaceObserver |Hind
+              js-cast
                 js/Promise.all $ to-js-data $ [] font-j font-h
-                , phlox.core/PromiseHost
+                , 'phlox.core/PromiseHost
           :examples $ []
           :schema $ quote $ Fn (-> phlox.core/PromiseHost) (:features :js-ffi)
         'loop-trigger! $ %{} 'CodeEntry (:doc |)
@@ -352,25 +350,32 @@
           :code $ quote $ defn main! ()
             .!then (load-global-fonts)
               fn (fonts)
-                render! (comp-container @*store) dispatch! $ {}
+                render! (comp-container @*store) on-phlox-event! $ {}
                 , &unit
             add-watch! *store :change $ fn (store prev)
-              render! (comp-container @*store) dispatch! $ {}
+              render! (comp-container @*store) on-phlox-event! $ {}
               , &unit
             reset! *loop $ browser/set-interval! loop-trigger! $ :interval grid-settings
             println "|App Started"
             , &unit
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+        'on-phlox-event! $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn on-phlox-event! (op)
+            if (enum? op)
+              dispatch! $ schema/decode-op op
+              raise "|Expected Enum operation"
+          :examples $ []
+          :schema $ quote $ Fn AnyEnum (-> Unit)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (remove-watch! *store :change)
             add-watch! *store :change $ fn (store prev)
-              render! (comp-container @*store) dispatch! $ {}
+              render! (comp-container @*store) on-phlox-event! $ {}
               , &unit
             browser/clear-interval! @*loop
             reset! *loop $ browser/set-interval! loop-trigger! $ :interval grid-settings
             println "|Code updated"
-            render! (comp-container @*store) dispatch! $ {} $ :swap? true
+            render! (comp-container @*store) on-phlox-event! $ {} $ :swap? true
             , &unit
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
@@ -382,7 +387,7 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
-            phlox.core :refer $ render!
+            phlox.core :refer $ render! ffi-load-font
             app.container :refer $ comp-container read-grid
             app.schema :as schema
             app.config :refer $ dev? grid-settings
@@ -393,38 +398,36 @@
       :defs $ {}
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op
-            :set-rule $ quote $ List Bool
-            :set-grid $ quote $ List (List Bool)
-            :states
-              quote $ List Dynamic
-              , 'Dynamic
-            :hydrate-storage 'app.schema/Store
+            :set-rule $ List Bool
+            :set-grid $ List $ List Bool
+            :states (List Dynamic) Dynamic
+            :hydrate-storage app.schema/Store
           :examples $ []
           :schema $ quote EnumDef
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store
-            :states $ quote $ Map Dynamic Dynamic
-            :rule $ quote $ List Bool
-            :grid $ quote $ List (List Bool)
+            :states $ Map Dynamic Dynamic
+            :rule $ List Bool
+            :grid $ List $ List Bool
           :examples $ []
           :schema $ quote StructDef
         'decode-op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-op (op)
             match op
               (:set-rule rule)
-                Op :set-rule $ decode-map-as rule $ :: 'List 'Bool
+                Op :set-rule $ decode-map-as rule $ List Bool
               (:set-grid grid)
-                Op :set-grid $ decode-map-as grid $ :: 'List (:: 'List 'Bool)
+                Op :set-grid $ decode-map-as grid $ List (List Bool)
               (:states cursor data)
                 Op :states
-                  decode-map-as cursor $ :: 'List 'Dynamic
+                  decode-map-as cursor $ List Dynamic
                   , data
               (:hydrate-storage data)
                 Op :hydrate-storage $ decode-map-as
                   if (struct? data) (&struct:to-map data) data
                   , 'app.schema/Store
           :examples $ []
-          :schema $ quote $ Fn Enum (-> app.schema/Op)
+          :schema $ quote $ Fn AnyEnum (-> app.schema/Op)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :states ({}) :rule
@@ -447,7 +450,7 @@
               (:states cursor data)
                 assoc store :states $ decode-map-as
                   assoc-in (:states store) (conj cursor :data) data
-                  :: 'Map 'Dynamic 'Dynamic
+                  Map Dynamic Dynamic
               (:hydrate-storage data) data
           :examples $ []
           :schema $ quote $ Fn app.schema/Store app.schema/Op (-> app.schema/Store)
