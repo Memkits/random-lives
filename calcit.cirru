@@ -350,32 +350,25 @@
           :code $ quote $ defn main! ()
             .!then (load-global-fonts)
               fn (fonts)
-                render! (comp-container @*store) on-phlox-event! $ {}
+                render! (comp-container @*store) dispatch! $ {}
                 , &unit
             add-watch! *store :change $ fn (store prev)
-              render! (comp-container @*store) on-phlox-event! $ {}
+              render! (comp-container @*store) dispatch! $ {}
               , &unit
             reset! *loop $ browser/set-interval! loop-trigger! $ :interval grid-settings
             println "|App Started"
             , &unit
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
-        'on-phlox-event! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn on-phlox-event! (op)
-            if (enum? op)
-              dispatch! $ schema/decode-op op
-              raise "|Expected Enum operation"
-          :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> Unit)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (remove-watch! *store :change)
             add-watch! *store :change $ fn (store prev)
-              render! (comp-container @*store) on-phlox-event! $ {}
+              render! (comp-container @*store) dispatch! $ {}
               , &unit
             browser/clear-interval! @*loop
             reset! *loop $ browser/set-interval! loop-trigger! $ :interval grid-settings
             println "|Code updated"
-            render! (comp-container @*store) on-phlox-event! $ {} $ :swap? true
+            render! (comp-container @*store) dispatch! $ {} $ :swap? true
             , &unit
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
@@ -411,23 +404,6 @@
             :grid $ List $ List Bool
           :examples $ []
           :schema $ quote StructDef
-        'decode-op $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn decode-op (op)
-            match op
-              (:set-rule rule)
-                Op :set-rule $ decode-map-as rule $ List Bool
-              (:set-grid grid)
-                Op :set-grid $ decode-map-as grid $ List (List Bool)
-              (:states cursor data)
-                Op :states
-                  decode-map-as cursor $ List Dynamic
-                  , data
-              (:hydrate-storage data)
-                Op :hydrate-storage $ decode-map-as
-                  if (struct? data) (&struct:to-map data) data
-                  , 'app.schema/Store
-          :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> app.schema/Op)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :states ({}) :rule
