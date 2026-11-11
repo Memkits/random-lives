@@ -65,6 +65,10 @@
             :text String
           :examples $ []
           :schema $ quote StructDef
+        'RuleStyleValue $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion RuleStyleValue Number String
+          :examples $ []
+          :schema $ quote UnionDef
         'button-of-dark $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def button-of-dark
             comp-button $ {} (:text "|Dark Grids")
@@ -272,7 +276,7 @@
               :font-family |Monaco
               :font-size 8
           :examples $ []
-          :schema $ quote $ Map Tag Dynamic
+          :schema $ quote $ Map Tag RuleStyleValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.container
           :require
