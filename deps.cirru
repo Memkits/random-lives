@@ -1,4 +1,4 @@
-{} (:calcit-version |0.41.0) (:version |0.0.4)
+{} (:calcit-version |0.41.1) (:version |0.0.4)
   :dependencies $ {}
     |Phlox-GL/phlox |0.9.3
     |Respo/respo-ui.calcit |0.15.2
