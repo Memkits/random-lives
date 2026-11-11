@@ -32,7 +32,7 @@
           :code $ quote $ def grid-settings
             GridSettings :size (read-grid-size!) :unit 8 :gap 1 :interval 400
           :examples $ []
-          :schema $ quote app.config/GridSettings
+          :schema $ quote GridSettings
         'read-grid-size! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-grid-size! ()
             match
@@ -58,7 +58,7 @@
           :code $ quote $ defref *rule-display
             RuleDisplay :rule ([]) :text |
           :examples $ []
-          :schema $ quote $ Ref app.container/RuleDisplay
+          :schema $ quote $ Ref RuleDisplay
         'RuleDisplay $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct RuleDisplay
             :rule $ List Bool
@@ -124,7 +124,7 @@
                 rule-text $ cached-rule-text! $ :rule store
               container ({})
                 text $ {}
-                  :text $ .slice rule-text 0 $ Option :some
+                  :text $ .slice rule-text 0 $ Some
                     / (.len rule-text) 2
                   :position $ [] 10 10
                   :style style-code
@@ -134,7 +134,7 @@
                   :style style-code
                 , button-of-generate button-of-random button-of-dark button-of-rule $ comp-grid $ :grid store
           :examples $ []
-          :schema $ quote $ Fn app.schema/Store (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn schema/Store (-> phlox.schema/PhloxElement)
         'comp-grid $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-grid (grid)
             container
@@ -290,13 +290,13 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store schema/store
           :examples $ []
-          :schema $ quote $ Ref app.schema/Store
+          :schema $ quote $ Ref schema/Store
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             reset! *store $ updater @*store op
             , &unit
           :examples $ []
-          :schema $ quote $ Fn app.schema/Op (-> Unit)
+          :schema $ quote $ Fn schema/Op (-> Unit)
         'iterate-next-cell $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn iterate-next-cell (i j grid rule)
             let
@@ -393,26 +393,24 @@
           :code $ quote $ defenum Op
             :set-rule $ List Bool
             :set-grid $ List $ List Bool
-            :states (List Dynamic) Dynamic
             :hydrate-storage app.schema/Store
           :examples $ []
           :schema $ quote EnumDef
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store
-            :states $ Map Dynamic Dynamic
             :rule $ List Bool
             :grid $ List $ List Bool
           :examples $ []
           :schema $ quote StructDef
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
-            Store :states ({}) :rule
+            Store :rule
               repeat false $ pow 2 9
               , :grid $ let
                   size $ :size grid-settings
                 repeat (repeat false size) size
           :examples $ []
-          :schema $ quote app.schema/Store
+          :schema $ quote Store
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.schema
           :require $ app.config :refer $ grid-settings
@@ -423,10 +421,6 @@
             match op
               (:set-rule rule) (assoc store :rule rule)
               (:set-grid grid) (assoc store :grid grid)
-              (:states cursor data)
-                assoc store :states $ decode-map-as
-                  assoc-in (:states store) (conj cursor :data) data
-                  Map Dynamic Dynamic
               (:hydrate-storage data) data
           :examples $ []
           :schema $ quote $ Fn app.schema/Store app.schema/Op (-> app.schema/Store)
