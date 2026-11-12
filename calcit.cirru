@@ -23,7 +23,7 @@
                 not= |true $ .unwrap-or (get-env |release) |false
               true true
           :examples $ []
-          :schema $ quote $ Fn (-> Bool) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Bool) (:features :io :js-ffi)
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev? (detect-dev?!)
           :examples $ []
@@ -121,7 +121,7 @@
                   reset! *rule-display $ RuleDisplay :rule rule :text value
                   , value
           :examples $ []
-          :schema $ quote $ Fn (List Bool) (-> String)
+          :schema $ quote $ Fn (List Bool) (-> String) (:features :state)
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
             let
@@ -138,7 +138,7 @@
                   :style style-code
                 , button-of-generate button-of-random button-of-dark button-of-rule $ comp-grid $ :grid store
           :examples $ []
-          :schema $ quote $ Fn schema/Store (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn schema/Store (-> phlox.schema/PhloxElement) (:features :state)
         'comp-grid $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-grid (grid)
             container
@@ -300,7 +300,7 @@
             reset! *store $ updater @*store op
             , &unit
           :examples $ []
-          :schema $ quote $ Fn schema/Op (-> Unit)
+          :schema $ quote $ Fn schema/Op (-> Unit) (:features :state)
         'iterate-next-cell $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn iterate-next-cell (i j grid rule)
             let
@@ -349,7 +349,7 @@
                 map $ fn (i)
                   -> row-template $ map $ fn (j) (iterate-next-cell i j grid rule)
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :state)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             .!then (load-global-fonts)
@@ -363,7 +363,7 @@
             println "|App Started"
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (remove-watch! *store :change)
             add-watch! *store :change $ fn (store prev)
@@ -375,7 +375,7 @@
             render! (comp-container @*store) dispatch! $ {} $ :swap? true
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'row-template $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def row-template
             range $ :size grid-settings
