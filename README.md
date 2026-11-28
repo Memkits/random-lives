@@ -7,9 +7,9 @@ Demo http://repo.memkits.org/random-lives/?size=60
 
 ### 使用者影响
 
-本地开发使用正式 Calcit 和 `@calcit/procs` **0.46.0**。请重新安装依赖、构建并刷新。512 位规则、网格环绕、400ms 更新和原前端地址保持原行为。
+本地开发使用正式 Calcit 和 `@calcit/procs` **0.47.1**。请重新安装依赖、构建并刷新。512 位规则、网格环绕、400ms 更新和原前端地址保持原行为。
 
-正式依赖为 Phlox 0.13.1、Respo 0.20.0、UI 0.16.6、Pointed Prompt 0.0.34、JS FFI 0.2.26，传递依赖为 Touch Control 0.0.47 和 Router 0.12.18。模拟循环、画布按钮和规则提交直接派发具名 `Op`。两种字体继续等待加载，加载过程使用 Phlox 的字体接口。
+正式依赖为 Phlox 0.13.2、Respo 0.20.1、UI 0.16.7、Pointed Prompt 0.0.35、JS FFI 0.2.26，传递依赖为 Touch Control 0.0.48 和 Router 0.12.19。模拟循环、画布按钮和规则提交直接派发具名 `Op`。两种字体继续等待加载，加载过程使用 Phlox 的字体接口。
 
 ### 开发与验证
 
